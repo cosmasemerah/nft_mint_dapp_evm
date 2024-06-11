@@ -28,6 +28,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="description"
           content="This is an NFT that will grant you access to all gasless drops"
         />
+        <meta
+          property="og:image"
+          content="https://nft-mint-dapp-evm.vercel.app/Gwei_Presale_Pass.png"
+        />
+        <meta
+          property="og:url"
+          content="https://nft-mint-dapp-evm.vercel.app"
+        />
         <meta name="keywords" content="NFTS, mint nfts" />
       </Head>
       <div className={`w-screen bg-primary ${mokoto.variable}`}>

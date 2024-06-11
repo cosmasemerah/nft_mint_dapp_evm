@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Countdown from "react-countdown";
 
 const CountdownTimer = ({ onComplete }) => {
-  const launchDate = new Date("2024-06-11T13:30:00");
+  const launchDate = new Date("2024-06-11T14:30:00");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
