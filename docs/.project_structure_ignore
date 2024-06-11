@@ -1,0 +1,11 @@
+.env
+.git
+.eslintrc.json
+.gitignore
+.next
+.nvmrc
+README.md
+node_modules
+package-lock.json
+public
+docs

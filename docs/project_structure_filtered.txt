@@ -1,0 +1,647 @@
+--- Folder Structure ---
+[assets]
+    ├── discord-line.svg
+    ├── gwei.webp
+    ├── logo.png
+    ├── medium-line.svg
+    ├── telegram-line.svg
+    └── twitter-x-line.svg
+[components]
+    ├── Countdown.js
+    ├── Footer.tsx
+    ├── Layout.js
+    └── index.js
+[const]
+    └── yourDetails.ts
+next.config.js
+package.json
+[pages]
+    ├── _app.tsx
+    ├── _document.tsx
+    └── index.tsx
+postcss.config.js
+prettier.config.js
+[styles]
+    └── globals.css
+tailwind.config.ts
+tsconfig.json
+[utils]
+    └── parseIneligibility.ts
+
+--- File Contents ---
+
+--- File: components/Countdown.js ---
+import React, { useState, useEffect } from "react";
+import Countdown from "react-countdown";
+
+const CountdownTimer = ({ onComplete }) => {
+  console.log(new Date());
+  const launchDate = new Date("2024-06-11T03:50:00");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return (
+    <>
+      {isClient ? (
+        <Countdown
+          date={launchDate}
+          renderer={({ days, hours, minutes, seconds, completed }) => {
+            if (completed) {
+              onComplete();
+              return (
+                <span className="mb-6 text-3xl font-bold">
+                  $GWEI Token Pass
+                </span>
+              );
+            } else {
+              return (
+                <div className="text-center">
+                  <h1 className="mb-4 text-6xl font-bold">
+                    Countdown to Launch
+                  </h1>
+                  <div className="text-4xl">
+                    {days}d {hours}h {minutes}m {seconds}s
+                  </div>
+                </div>
+              );
+            }
+          }}
+        />
+      ) : (
+        <div className="text-center">
+          <h1 className="mb-4 text-6xl font-bold">Countdown to Launch</h1>
+          <div className="text-4xl">Loading...</div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default CountdownTimer;
+
+
+--- File: components/Footer.tsx ---
+import React from "react";
+import Image from "next/image";
+
+import discord from "../assets/discord-line.svg";
+import twitter from "../assets/twitter-x-line.svg";
+import telegram from "../assets/telegram-line.svg";
+
+const Footer = () => {
+  return (
+    <footer className="flex flex-col items-center justify-center space-y-3 py-5">
+      <div className="flex items-center justify-center gap-4">
+        <a href="https://discord.com/invite/AVtphQawny">
+          <Image src={discord} alt="Discord" width={24} height={24} />
+        </a>
+        <a href="https://x.com/GweiToken_eth">
+          <Image src={twitter} alt="Twitter" width={24} height={24} />
+        </a>
+        <a href="https://t.me/GweiToken">
+          <Image src={telegram} alt="Telegram" width={24} height={24} />
+        </a>
+      </div>
+      <p className="text-xs text-dark">All rights reserved, $GWEI 2024</p>
+    </footer>
+  );
+};
+
+export default Footer;
+
+
+--- File: components/Layout.js ---
+// components/Layout.js
+import React from "react";
+import logo from "../assets/logo.png";
+import Image from "next/image";
+import Link from "next/link";
+
+import Footer from "./Footer";
+
+const Layout = ({ children }) => {
+  return (
+    <div className="flex h-screen flex-col">
+      <header className="mb-12 w-full">
+        <div className="ml-10 mt-10 flex h-16 w-16 items-center justify-center md:h-[70px] md:w-[70px]">
+          <Link href="/">
+            <Image src={logo} alt="GWEI logo" className="rounded-full" />
+          </Link>
+        </div>
+      </header>
+
+      <main className="w-full flex-grow p-5 md:p-0">{children}</main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;
+
+
+--- File: components/index.js ---
+import Layout from "./Layout";
+
+export { Layout };
+
+
+--- File: const/yourDetails.ts ---
+// Replace this with your contract address
+export const myEditionDropContractAddress: string =
+  "0x889d38F555d900d934230E3E97e1A271cDf2Def0";
+
+// Replace this with your token id
+export const tokenId: string = "0";
+
+
+--- File: pages/_app.tsx ---
+import type { AppProps } from "next/app";
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { Sepolia } from "@thirdweb-dev/chains";
+import { Layout } from "../components";
+import "../styles/globals.css";
+import Head from "next/head";
+import localFont from "next/font/local";
+
+const mokoto = localFont({
+  src: "../public/fonts/Mokoto.ttf",
+  display: "swap",
+  variable: "--font-mokoto",
+});
+
+// This is the chain your dApp will work on.
+const activeChain = Sepolia;
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <ThirdwebProvider
+      activeChain={activeChain}
+      clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
+    >
+      <Head>
+        <title>Mint access nft</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="description"
+          content="This is an NFT that will grant you access to all gasless drops"
+        />
+        <meta name="keywords" content="NFTS, mint nfts" />
+      </Head>
+      <div className={`w-screen bg-primary ${mokoto.variable}`}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </div>
+    </ThirdwebProvider>
+  );
+}
+
+export default MyApp;
+
+
+--- File: pages/_document.tsx ---
+import Document, { Html, Head, Main, NextScript } from "next/document";
+
+class MyDocument extends Document {
+  render() {
+    return (
+      <Html lang="en">
+        <Head></Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+
+export default MyDocument;
+
+
+--- File: pages/index.tsx ---
+import {
+  useActiveClaimConditionForWallet,
+  useAddress,
+  useClaimConditions,
+  useClaimerProofs,
+  useClaimIneligibilityReasons,
+  useContract,
+  useContractMetadata,
+  useTotalCirculatingSupply,
+  Web3Button,
+} from "@thirdweb-dev/react";
+import { BigNumber, utils } from "ethers";
+import type { NextPage } from "next";
+import { useMemo, useState } from "react";
+import { parseIneligibility } from "../utils/parseIneligibility";
+import { myEditionDropContractAddress, tokenId } from "../const/yourDetails";
+import CountdownTimer from "../components/Countdown";
+
+import Image from "next/image";
+import gweiNFT from "../assets/gwei.webp";
+
+const Home: NextPage = () => {
+  const [countdownComplete, setCountdownComplete] = useState(false);
+
+  const address = useAddress();
+  const [quantity, setQuantity] = useState(1);
+  const { contract: editionDrop } = useContract(myEditionDropContractAddress);
+  const { data: contractMetadata } = useContractMetadata(editionDrop);
+
+  const claimConditions = useClaimConditions(editionDrop);
+  const activeClaimCondition = useActiveClaimConditionForWallet(
+    editionDrop,
+    address,
+    tokenId,
+  );
+  const claimerProofs = useClaimerProofs(editionDrop, address || "", tokenId);
+  const claimIneligibilityReasons = useClaimIneligibilityReasons(
+    editionDrop,
+    {
+      quantity,
+      walletAddress: address || "",
+    },
+    tokenId,
+  );
+
+  const claimedSupply = useTotalCirculatingSupply(editionDrop, tokenId);
+
+  const totalAvailableSupply = useMemo(() => {
+    try {
+      return BigNumber.from(activeClaimCondition.data?.availableSupply || 0);
+    } catch {
+      return BigNumber.from(1_000_000);
+    }
+  }, [activeClaimCondition.data?.availableSupply]);
+
+  const numberClaimed = useMemo(() => {
+    return BigNumber.from(claimedSupply.data || 0).toString();
+  }, [claimedSupply]);
+
+  const numberTotal = useMemo(() => {
+    const n = totalAvailableSupply.add(BigNumber.from(claimedSupply.data || 0));
+    if (n.gte(1_000_000)) {
+      return "";
+    }
+    return n.toString();
+  }, [totalAvailableSupply, claimedSupply]);
+
+  const priceToMint = useMemo(() => {
+    const bnPrice = BigNumber.from(
+      activeClaimCondition.data?.currencyMetadata.value || 0,
+    );
+    return `${utils.formatUnits(
+      bnPrice.mul(quantity).toString(),
+      activeClaimCondition.data?.currencyMetadata.decimals || 18,
+    )} ${activeClaimCondition.data?.currencyMetadata.symbol}`;
+  }, [
+    activeClaimCondition.data?.currencyMetadata.decimals,
+    activeClaimCondition.data?.currencyMetadata.symbol,
+    activeClaimCondition.data?.currencyMetadata.value,
+    quantity,
+  ]);
+
+  const maxClaimable = useMemo(() => {
+    let bnMaxClaimable;
+    try {
+      bnMaxClaimable = BigNumber.from(
+        activeClaimCondition.data?.maxClaimableSupply || 0,
+      );
+    } catch (e) {
+      bnMaxClaimable = BigNumber.from(1_000_000);
+    }
+
+    let perTransactionClaimable;
+    try {
+      perTransactionClaimable = BigNumber.from(
+        activeClaimCondition.data?.maxClaimablePerWallet || 0,
+      );
+    } catch (e) {
+      perTransactionClaimable = BigNumber.from(1_000_000);
+    }
+
+    if (perTransactionClaimable.lte(bnMaxClaimable)) {
+      bnMaxClaimable = perTransactionClaimable;
+    }
+
+    const snapshotClaimable = claimerProofs.data?.maxClaimable;
+
+    if (snapshotClaimable) {
+      if (snapshotClaimable === "0") {
+        // allowed unlimited for the snapshot
+        bnMaxClaimable = BigNumber.from(1_000_000);
+      } else {
+        try {
+          bnMaxClaimable = BigNumber.from(snapshotClaimable);
+        } catch (e) {
+          // fall back to default case
+        }
+      }
+    }
+
+    let max;
+    if (totalAvailableSupply.lt(bnMaxClaimable)) {
+      max = totalAvailableSupply;
+    } else {
+      max = bnMaxClaimable;
+    }
+
+    if (max.gte(1_000_000)) {
+      return 1_000_000;
+    }
+    return max.toNumber();
+  }, [
+    claimerProofs.data?.maxClaimable,
+    totalAvailableSupply,
+    activeClaimCondition.data?.maxClaimableSupply,
+    activeClaimCondition.data?.maxClaimablePerWallet,
+  ]);
+
+  const isSoldOut = useMemo(() => {
+    try {
+      return (
+        (activeClaimCondition.isSuccess &&
+          BigNumber.from(activeClaimCondition.data?.availableSupply || 0).lte(
+            0,
+          )) ||
+        numberClaimed === numberTotal
+      );
+    } catch (e) {
+      return false;
+    }
+  }, [
+    activeClaimCondition.data?.availableSupply,
+    activeClaimCondition.isSuccess,
+    numberClaimed,
+    numberTotal,
+  ]);
+
+  const canClaim = useMemo(() => {
+    return (
+      activeClaimCondition.isSuccess &&
+      claimIneligibilityReasons.isSuccess &&
+      claimIneligibilityReasons.data?.length === 0 &&
+      !isSoldOut
+    );
+  }, [
+    activeClaimCondition.isSuccess,
+    claimIneligibilityReasons.data?.length,
+    claimIneligibilityReasons.isSuccess,
+    isSoldOut,
+  ]);
+
+  const isLoading = useMemo(() => {
+    return (
+      activeClaimCondition.isLoading || claimedSupply.isLoading || !editionDrop
+    );
+  }, [activeClaimCondition.isLoading, editionDrop, claimedSupply.isLoading]);
+
+  const buttonLoading = useMemo(
+    () => isLoading || claimIneligibilityReasons.isLoading,
+    [claimIneligibilityReasons.isLoading, isLoading],
+  );
+  const buttonText = useMemo(() => {
+    if (isSoldOut) {
+      return "Sold Out";
+    }
+
+    if (canClaim) {
+      const pricePerToken = BigNumber.from(
+        activeClaimCondition.data?.currencyMetadata.value || 0,
+      );
+      if (pricePerToken.eq(0)) {
+        return "Mint (Free)";
+      }
+      return `Mint (${priceToMint})`;
+    }
+    if (claimIneligibilityReasons.data?.length) {
+      return parseIneligibility(claimIneligibilityReasons.data, quantity);
+    }
+    if (buttonLoading) {
+      return "Checking eligibility...";
+    }
+
+    return "Claiming not available";
+  }, [
+    isSoldOut,
+    canClaim,
+    claimIneligibilityReasons.data,
+    buttonLoading,
+    activeClaimCondition.data?.currencyMetadata.value,
+    priceToMint,
+    quantity,
+  ]);
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center">
+      <div className="font-mokoto flex flex-col items-center justify-center">
+        <CountdownTimer onComplete={() => setCountdownComplete(true)} />
+      </div>
+
+      {countdownComplete && (
+        <div className="mb-16 flex w-full flex-col items-center justify-center gap-12 lg:flex-row lg:items-start lg:gap-[10%]">
+          {isLoading ? (
+            <div className="flex w-full animate-pulse flex-col items-center justify-center gap-8 lg:flex-row lg:items-start lg:gap-[10%]">
+              <div className="flex w-fit flex-col space-y-12">
+                <div className="h-[24rem] w-[24rem] rounded-xl bg-slate-700"></div>
+                <div className="grid w-full grid-cols-3 gap-4">
+                  <div className="col-span-2 h-3 rounded bg-slate-700"></div>
+                  <div className="col-span-1 h-3 rounded bg-slate-700"></div>
+                  <div className="col-span-2 h-3 rounded bg-slate-700"></div>
+                  <div className="col-span-1 h-3 rounded bg-slate-700"></div>
+                </div>
+                <div className="h-11 w-full rounded-xl bg-slate-700"></div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col gap-8">
+                {/* Image Preview of NFTs */}
+                <div className="flex w-fit items-center justify-center rounded-xl border border-[#525050] p-2">
+                  <Image
+                    className="h-[24rem] w-[24rem] rounded-xl"
+                    src={contractMetadata?.image || gweiNFT}
+                    alt={`${contractMetadata?.name} preview image`}
+                    width={384}
+                    height={384}
+                  />
+                </div>
+
+                <div className="flex w-full flex-col gap-6">
+                  {/* Amount claimed so far */}
+                  <div className="flex w-full items-start justify-between gap-[10%]">
+                    <div>
+                      <p>Total Minted</p>
+                    </div>
+                    <div className="text-dark">
+                      {claimedSupply ? (
+                        <p>
+                          <b>{numberClaimed}</b>
+                          {" / "}
+                          {numberTotal || "∞"}
+                        </p>
+                      ) : (
+                        // Show loading state if we're still loading the supply
+                        <p>Loading...</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {claimConditions.data?.length === 0 ||
+                  claimConditions.data?.every(
+                    (cc) => cc.maxClaimableSupply === "0",
+                  ) ? (
+                    <div>
+                      <h2>
+                        This drop is not ready to be minted yet. (No claim
+                        condition set)
+                      </h2>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex w-full flex-row items-center justify-between gap-8 lg:w-auto">
+                        <p>Mint:</p>
+                        <div className="flex items-center justify-start gap-12 text-black">
+                          <button
+                            className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-dark text-3xl disabled:opacity-25`}
+                            onClick={() => setQuantity(quantity - 1)}
+                            disabled={quantity <= 1}
+                          >
+                            -
+                          </button>
+
+                          <h4>{quantity}</h4>
+
+                          <button
+                            className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-dark text-3xl disabled:opacity-25`}
+                            onClick={() => setQuantity(quantity + 1)}
+                            disabled={quantity >= maxClaimable}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-2 w-full ">
+                        {isSoldOut ? (
+                          <div>
+                            <h2>Sold Out</h2>
+                          </div>
+                        ) : (
+                          <Web3Button
+                            className="flex !w-full"
+                            theme="light"
+                            contractAddress={editionDrop?.getAddress() || ""}
+                            action={(cntr) =>
+                              cntr.erc1155.claim(tokenId, quantity)
+                            }
+                            isDisabled={!canClaim || buttonLoading}
+                            onError={(err) => {
+                              console.error(err);
+                              alert("Error claiming NFTs");
+                            }}
+                            onSuccess={() => {
+                              setQuantity(1);
+                              alert("Successfully claimed NFTs");
+                            }}
+                          >
+                            {buttonLoading ? "Loading..." : buttonText}
+                          </Web3Button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Home;
+
+
+--- File: styles/globals.css ---
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Change the values in here to match your branding */
+:root {
+  /* Background color of the page */
+  --background-color: #f1f5f9;
+
+  /* Color of the text/words */
+  --text-color: #070a13;
+
+  /* Main color of your brand */
+  --color-primary: #070a13;
+
+  /* Which font you want to use */
+  --font: "Inter", sans-serif;
+
+}
+
+/* --- Don't need to modify below here --- */
+
+/* Default design values of the entire document */
+
+body {
+  background: var(--background-color);
+  font-family: var(--font);
+  color: var(--text-color);
+
+  display: flex;
+  margin: 0;
+  text-align: start;
+  overflow-x: hidden;
+}
+
+/* styles.css or your Tailwind CSS configuration */
+.custom-button {
+  background-color: #070a13;
+}
+
+
+
+--- File: utils/parseIneligibility.ts ---
+import { ClaimEligibility } from "@thirdweb-dev/sdk";
+
+export function parseIneligibility(
+  reasons: ClaimEligibility[],
+  quantity = 0
+): string {
+  if (!reasons.length) {
+    return "";
+  }
+
+  const reason = reasons[0];
+
+  if (
+    reason === ClaimEligibility.Unknown ||
+    reason === ClaimEligibility.NoActiveClaimPhase ||
+    reason === ClaimEligibility.NoClaimConditionSet
+  ) {
+    return "This drop is not ready to be minted.";
+  } else if (reason === ClaimEligibility.NotEnoughTokens) {
+    return "You don't have enough currency to mint.";
+  } else if (reason === ClaimEligibility.AddressNotAllowed) {
+    if (quantity > 1) {
+      return `You are not eligible to mint ${quantity} tokens.`;
+    }
+
+    return "You are not eligible to mint at this time.";
+  }
+
+  return reason;
+}
+
