@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Countdown from "react-countdown";
 
 const CountdownTimer = ({ onComplete }) => {
-  const launchDate = new Date("2024-06-11T14:30:00");
+  const launchDate = new Date("2024-06-11T12:25:00");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -19,15 +19,13 @@ const CountdownTimer = ({ onComplete }) => {
               onComplete();
               return (
                 <span className="mb-6 text-3xl font-bold">
-                  $GWEI Token Pass
+                  $GWEI TOKEN PRESALE IS LIVE!
                 </span>
               );
             } else {
               return (
                 <div className="text-center">
-                  <h1 className="mb-4 text-6xl font-bold">
-                    Countdown to Launch
-                  </h1>
+                  <h1 className="mb-4 text-6xl font-bold">PRESALE LIVE IN</h1>
                   <div className="text-4xl">
                     {days}d {hours}h {minutes}m {seconds}s
                   </div>
@@ -38,7 +36,7 @@ const CountdownTimer = ({ onComplete }) => {
         />
       ) : (
         <div className="text-center">
-          <h1 className="mb-4 text-6xl font-bold">Countdown to Launch</h1>
+          <h1 className="mb-4 text-6xl font-bold">PRESALE LIVE IN</h1>
           <div className="text-4xl">Loading...</div>
         </div>
       )}
