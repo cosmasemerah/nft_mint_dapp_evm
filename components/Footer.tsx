@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer className="flex flex-col items-center justify-center space-y-3 py-5">
       <div className="flex items-center justify-center gap-4">
-        <a href="https://discord.com/invite/AVtphQawny">
+        <a href="https://discord.com/invite/KueW8zcVrV">
           <Image src={discord} alt="Discord" width={24} height={24} />
         </a>
         <a href="https://x.com/GweiToken_eth">
