@@ -17,7 +17,7 @@ import { myEditionDropContractAddress, tokenId } from "../const/yourDetails";
 import CountdownTimer from "../components/Countdown";
 
 import Image from "next/image";
-import gweiNFT from "../assets/gwei.webp";
+import gweiNFT from "../assets/Gwei_Presale_Pass.png";
 
 const Home: NextPage = () => {
   const [countdownComplete, setCountdownComplete] = useState(false);
@@ -213,7 +213,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
-      <div className="font-mokoto flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center font-mokoto">
         <CountdownTimer onComplete={() => setCountdownComplete(true)} />
       </div>
 

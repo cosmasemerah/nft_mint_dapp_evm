@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
-import { Sepolia } from "@thirdweb-dev/chains";
+import { Arbitrum } from "@thirdweb-dev/chains";
 import { Layout } from "../components";
 import "../styles/globals.css";
 import Head from "next/head";
@@ -13,7 +13,7 @@ const mokoto = localFont({
 });
 
 // This is the chain your dApp will work on.
-const activeChain = Sepolia;
+const activeChain = Arbitrum;
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
